@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Project</title>
+  <!-- Include jQuery library -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Include your custom CSS file for styling -->
+  <!-- <link rel="stylesheet" href="stylesForProjectEdit.css">-->
+</head>
+<style>
+    .styled-form {
+    width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+/* Style the input fields */
+.styled-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 16px;
+}
+
+/* Style the submit button */
+.styled-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* Style the message div */
+#message {
+    margin-top: 10px;
+    color: #ff0000;
+}
+</style>
+<body>
+<h1>Edit Page</h1>
+<form id="editForm" class="styled-form">
+  <!-- Input fields for editing data -->
+  <label for="name">Project Name:</label>
+  <input type="text" id="name" name="projectName" class="styled-input" placeholder="Previous Name">
+  <label for="manager">Project Manager:</label>
+  <input type="text" id="manager" name="projectManager" class="styled-input" placeholder="Previous Email">
+  <label for="proposer">Proposer:</label>
+  <input type="text" id="proposer" name="proposer" class="styled-input" placeholder="Previous Email">
+  <label for="location">Location:</label>
+  <input type="text" id="location" name="location" class="styled-input" placeholder="Previous Email">
+  <label for="link">Link:</label>
+  <input type="text" id="link" name="startDate" class="styled-input" placeholder="Previous Email">
+  <label for="date">Date:</label>
+  <input type="text" id="date" name="locationLink" class="styled-input" placeholder="Previous Email">
+  <!-- Add more input fields as needed -->
+  <input type="submit" class="styled-button" value="Save">
+
+  <button type="button" class="styled-button" id="closeButton" >Close</button>
+</form>
+<!-- Display a message for user feedback -->
+<div id="message"></div>
+<!-- JavaScript for handling AJAX requests -->
+<script>
+   $(document).ready(function() {
+    // Function to fetch project details by ID
+    function fetchProjectDetailsById(id) {
+        $.ajax({
+            type: 'GET',
+            url: 'http://localhost:8080/getBySystemId/' + id, // Replace with your actual endpoint
+            success: function(data) {
+                // Populate the form field placeholders with data
+                $('#name').val(data.projectName);
+                $('#manager').val(data.projectManager);
+                $('#proposer').val(data.proposer);
+                $('#location').val(data.location);
+                $('#link').val(data.startDate);
+                $('#date').val(data.locationLink);
+            },
+            error: function(error) {
+                $('#message').html('Error fetching project details: ' + error.responseText);
+            }
+        });
+    }
+
+    // Get the project ID from the URL query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const projectId = urlParams.get('id');
+
+    // Fetch project details by ID
+    fetchProjectDetailsById(projectId);
+
+    // Listen for form submission
+    $('#editForm').submit(function(event) {
+    event.preventDefault();
+
+    // Serialize form data as an object
+    var formData = {};
+    $(this).serializeArray().forEach(function(item) {
+        formData[item.name] = item.value;
+    });
+
+    // Send the AJAX request to update data
+    $.ajax({
+        type: 'PUT',
+        url: 'http://localhost:8080/update/' + projectId, // Replace with your actual endpoint
+        data: JSON.stringify(formData), // Send the serialized form data as JSON
+        contentType: 'application/json',
+        success: function(response) {
+            $('#message').html(response.message);
+
+            // Navigate to the projects page after a successful update
+            window.location.href = "project.html";
+        },
+        error: function(error) {
+            $('#message').html('Error updating data: ' + error.responseText);
+        }
+    });
+    // Handle the close button to redirect to the projects page
+    $('#closeButton').click(function() {
+        window.location.href = "project.html"; // Replace with the URL of your projects page
+    });
+});
+});
+
+</script>
+
+</body>
+</html>

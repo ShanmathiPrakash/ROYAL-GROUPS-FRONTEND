@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAKE PAYMENT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            background-color: #ffffff;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button {
+            display: block;
+            margin: 20px auto 0;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Project Information</h1>
+        <form id="projectForm">
+            <div class="form-group">
+                <label for="projectName">Project Name:</label>
+                <select id="projectName" name="projectName" required>
+                    <option value="gold">Gold</option>
+                    <option value="silver">Silver</option>
+                    <option value="platinum">Platinum</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="amount">Amount:</label>
+                <input type="number" id="amount" name="amount" required>
+            </div>
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" readonly>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const projectForm = document.getElementById('projectForm');
+            const usernameInput = document.getElementById('username');
+
+            // Get the username from the URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            console.log(urlParams)
+            const username = urlParams.get("username");
+       
+            if (username) {
+                // Set the username value in the input field
+                usernameInput.value = username;
+            } else {
+                alert("Username parameter is missing");
+            }
+
+            projectForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const projectName = document.getElementById('projectName').value;
+                const amount = document.getElementById('amount').value;
+                console.log(amount)
+                const username = document.getElementById('username').value;
+                console.log(username)
+
+                // Create an object with the form data
+                const formData = {
+                    projectName: projectName,
+                    amountReceived: amount,
+                    userName: username
+                };
+
+                // Send the form data to the server using fetch
+                fetch('http://localhost:8080/payment/PaymentReceived', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Handle a successful response here (e.g., show a success message)
+                        console.log('Form data sent successfully');
+                    } else {
+                        // Handle errors (e.g., show an error message)
+                        console.error('Error sending form data');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error sending form data:', error);
+                });
+            });
+        });
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+    const projectSelect = document.getElementById("projectName");
+    const amountInput = document.getElementById("amount");
+
+    // Define minimum amounts for each project
+    const minimumAmounts = {
+        gold: 10000,
+        silver: 20000, // You can set the minimum amount for Silver as needed
+        platinum: 500000,
+    };
+
+    // Add an event listener to the project select to update the minimum amount
+    projectSelect.addEventListener("change", function () {
+        const selectedProject = projectSelect.value;
+        const minimumAmount = minimumAmounts[selectedProject];
+
+        // Set the minimum attribute of the amount input
+        amountInput.min = minimumAmount;
+    });
+
+    // Optional: You can set an initial minimum amount based on the default project name
+    const initialSelectedProject = projectSelect.value;
+    const initialMinimumAmount = minimumAmounts[initialSelectedProject];
+    amountInput.min = initialMinimumAmount;
+    
+    // Add an event listener to the form submission
+    const projectForm = document.getElementById("projectForm");
+    projectForm.addEventListener("submit", function (e) {
+        const selectedProject = projectSelect.value;
+        const enteredAmount = parseFloat(amountInput.value);
+
+        // Check if the entered amount is less than the minimum required amount
+        if (enteredAmount < minimumAmounts[selectedProject]) {
+            e.preventDefault(); // Prevent form submission
+            alert("Entered amount is less than the minimum required amount.");
+        }
+    })
+});
+    </script>
+</body>
+</html>

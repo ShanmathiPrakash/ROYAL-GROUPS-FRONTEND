@@ -1,0 +1,205 @@
+<!DOCTYPE HTML>
+<html xmlns="">
+<head>
+    <title>Royal Groups</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<style>
+    .logo-container {
+   position: relative;
+   width: 100%;
+   height: 100px;
+
+}
+.logo-container img {
+   position: absolute;
+   top: 10px; /* Adjust the top distance as needed */
+   right: 10px; /* Adjust the right distance as needed */
+   width: 50px; /* Adjust the width of the circular logo */
+   height: 50px; /* Keep the height the same as width for a perfect circle */
+   border-radius: 50%; /* Make the image circular */
+   object-fit: cover; /* Ensure the image covers the circular area */
+}
+.card-img-top{
+    width: 139px;
+    border-top-left-radius: calc(.25rem - 1px);
+    border-top-right-radius: calc(.25rem - 1px);
+    margin-left: 172px;
+}
+
+.card {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: navajowhite;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+.card-title {
+    font-style: italic;
+    font-size: 22px;
+    margin-bottom: .75rem;
+}
+.list-group {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    padding-left: 9px;
+    margin-bottom: -4px;
+    background-color: unset;
+}
+body {
+    margin: 0;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: blanchedalmond;
+}
+ /* Button styling */
+ .custom-button {
+    background-color: #4135dc;
+    color: #fff;
+    padding: 9px 44px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    margin-left: 127px;
+ }
+
+    /* Hover effect */
+    .custom-button:hover {
+        background-color: #f21616;
+        color: #fff;
+    }
+</style>
+
+<body>
+<!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">Royal Groups</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/home">Home  <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/project">Project</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/user">User</a>
+            </li>
+
+        </ul>
+
+        <div>
+            <a class="btn btn-primary" style="color: white" href="/login" role="button">Admin</a>
+        </div>
+        <div class="logo-container">
+            <img src="sri.jpeg" alt="Logo">
+        </div>
+
+    </div>
+</nav> -->
+
+<!--<div class="text-center p-A10 content" style="width: 400px; height: 150px;">-->
+
+<div class="row">
+    <div class="col-sm-4">
+        <div class="card">
+<img class="card-img-top" src="gold coin.jpg" alt="Card image cap" width="40" height="230">
+    <div class="card-body">
+        <!--  <body style="background-color:powderblue;">-->
+        <h1 class="card-title">Gold Zone</h1>
+      <!--  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">Minimum Investment : Rs. 5 Thousand</li>
+        <li class="list-group-item">Maximum Investment  : Rs. 5 Lakhs</li>
+        <li class="list-group-item">Expected Returns : 12 Months</li>
+
+    </ul>
+    <div class="card-body">
+        <a href="#" class="card-link">https://keeladiventures.com/admin_homepage</a>
+         </div>
+         <div>
+            <a href="login.html" class="custom-button">Invest Now</a>
+        </div>
+</div>
+    </div>
+    <div class="col-sm-4">
+        <div class="card">
+            <img class="card-img-top" src="diamond.jpg" alt="Card image cap" width="60" height="230">
+            <div class="card-body">
+                <!--  <body style="background-color:powderblue;">-->
+                <h1 class="card-title">Diamond Zone</h1>
+             <!--   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>  -->
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Minimum Investment  : Rs. 10 Thousand</li>
+                <li class="list-group-item">Maximum Investment  : Rs. 10 Lakhs</li>
+                <li class="list-group-item">Expected Returns    : 36 Months</li>
+
+
+            </ul>
+            <div class="card-body">
+                <a href="#" class="card-link">https://keeladiventures.com/admin_homepage</a>
+                  </div>
+                  <div>
+                    <a href="login.html" class="custom-button">Invest Now</a>
+                </div>
+        </div>
+       
+    </div>
+    <div class="col-sm-4">
+        <div class="card">
+            <img class="card-img-top" src="platinum.jpg" alt="Card image cap" width="30" height="230">
+            <div class="card-body">
+                <!--  <body style="background-color:powderblue;">-->
+                <h1 class="card-title">Platinum zone</h1>
+              <!--  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Minimum Investment : Rs. 25 Lacs</li>
+                <li class="list-group-item">Maximum Investment  : Rs. 15 Lakhs</li>
+                <li class="list-group-item">Expected Returns : 36 Months</li>
+
+            </ul>
+            <div class="card-body">
+                <a href="#" class="card-link">https://keeladiventures.com/admin_homepage</a>
+                  </div>
+                  <div>
+                    <a href="login.html" class="custom-button">Invest Now</a>
+                </div>
+        </div>
+        
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .payment-form {
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .payment-form label {
+            font-weight: bold;
+        }
+          
+        .payment-form input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .payment-form button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .payment-form button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        /* Add CSS for validation messages */
+        .validation-message {
+            color: red;
+            margin-top: 5px;
+        }
+
+    </style>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    
+</head>
+<body>
+    <div class="payment-form">
+        <h3>MAKE PAYMENT</h3>
+        <form id="payment-modal-form">
+            <div>
+                <label for="amount">Payment Amount:</label>
+                <input type="number" id="amount" name="amount" placeholder="Enter Amount" required>
+            </div>
+            <!-- You can add hidden input fields to store the username and project name -->
+            <input type="hidden" id="username" name="username">
+            <input type="hidden" id="project-name" name="project_name">
+            <!-- Validation message container -->
+            <div class="validation-message" id="amount-validation"></div>
+            <button type="submit" id="submit-payment">PAY</button>
+        </form>
+    </div>
+    <script>
+        // Function to get query parameters from the URL
+        function getQueryParameters() {
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const username = urlParams.get('username');
+            const projectName = urlParams.get('projectname');
+            const amount = urlParams.get('amount');
+
+            return { username, projectName, amount };
+        }
+        // Populate the hidden fields with query parameter values
+        const { username, projectName, amount } = getQueryParameters();
+        document.getElementById("username").value = username;
+        document.getElementById("project-name").value = projectName;
+        if (amount) {
+            // Set the value of the "amount" input field
+            document.getElementById("amount").value = amount;
+        } else {
+            alert("Amount parameter is missing");
+        }
+
+        document.getElementById("payment-modal-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            // Get the payment amount from the input field
+            const paymentAmount = parseFloat(document.getElementById("amount").value);
+
+            // Check if the amount is valid (greater than 0)
+            if (paymentAmount > 0) {
+                // Clear any previous validation message
+                document.getElementById("amount-validation").textContent = "";
+
+                // Create a JSON object with the payment data
+                const paymentData = {
+                    userName:username,
+                    projectName:projectName,
+                    amountPaid:paymentAmount,
+                };
+                // Send the payment data to your server using fetch or another AJAX method
+                // Replace the URL with your server's payment processing endpoint
+                fetch("http://localhost:8080/payment/savePayments", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(paymentData),
+                })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("Payment request failed");
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    // Handle the response from the server (e.g., show a success message)
+                    alert("Payment successful!");
+                })
+                .catch((error) => {
+                    // Handle errors (e.g., show an error message)
+                    alert("Payment failed. Error: " + error.message);
+                });
+            } else {
+                // Display a validation message
+                document.getElementById("amount-validation").textContent = "Please enter a valid amount.";
+            }
+        });
+    </script>
+</body>
+</html>

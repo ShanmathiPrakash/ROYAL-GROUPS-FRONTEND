@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Matteo Bruni">
+    <title>Signin Template - tsParticles</title>
+
+    <!-- Custom styles for this template -->
+    <link href="css/particles.css" rel="stylesheet"/>
+    <link href="css/auth.css" rel="stylesheet"/>
+</head>
+<body>
+    <div id="tsparticles"></div>
+    <main class="box">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <div class="inputBox">
+                <label for="userName">Username</label>
+                <input type="text" name="userName" id="userName" placeholder="Type your username" required />
+            </div>
+            <div class="inputBox">
+                <label for="userPassword">Password</label>
+                <input type="password" name="userPassword" id="userPassword" placeholder="Type your password" required />
+            </div>
+            <div>
+                <button type="submit" name="loginButton" style="float: left;">Submit</button>
+                <a class="button" href="register.html" style="float: left;">Register</a>
+                <a class="button" href="register.html" style="float: left;">Forget Password</a>
+            </div>
+           
+        </form>
+    </main>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@1.34.1/tsparticles.min.js"
+            integrity="sha256-D6LXCdCl4meErhc25yXnxIFUtwR96gPo+GtLYv89VZo=" crossorigin="anonymous"></script>
+    <script>
+        console.log("JavaScript file loaded");
+        document.addEventListener("DOMContentLoaded", function () {
+            const loginForm = document.getElementById("loginForm");
+
+            loginForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                const userNameInput = document.getElementById("userName");
+                const userPasswordInput = document.getElementById("userPassword");
+
+                const Firstname = userNameInput.value.trim();
+                const password = userPasswordInput.value;
+
+                console.log("Username:", Firstname); // Debug: Check if username is correctly trimmed
+
+                const loginRequest = {
+                    Firstname: Firstname,
+                    Password: password
+                };
+
+                console.log(loginRequest); // Debug: Log the request object
+
+                fetch("http://localhost:8080/User/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(loginRequest)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Login failed");
+                    }
+                    return response.text();
+                })
+                .then(role => {
+                    console.log("Role:", role); // Debug: Check the role received from the server
+                    if (role === "admin") {
+                        window.location.href = "adminpage.html";
+                    } else if (role === "user") {
+                        localStorage.setItem("username", Firstname); // Use localStorage instead of sessionStorage
+                        const storedUsername = localStorage.getItem("Firstname");
+                        console.log("Stored Username in localStorage:", storedUsername); // Debug: Check if username is stored
+                        window.location.href = `userpage.html?username=${Firstname}`;
+                    } else {
+                        alert("Invalid username or password");
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert("Login failed. Please check your username and password.");
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
+

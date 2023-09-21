@@ -1,0 +1,240 @@
+<html>
+<head>
+    <title>Admin Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.min.css" integrity="sha256-BicZsQAhkGHIoR//IB2amPN5SrRb3fHB8tFsnqRAwnk=" crossorigin="anonymous">    <!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">-->
+    <!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>-->
+    <!--    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">-->
+    <!--    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>-->
+    <!--    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>-->
+    <!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+
+</head>
+
+<script type="text/javascript">
+
+    $.getJSON('http://localhost:8080/getprojects', function(json) {
+       var tr=[];
+       var op=[];
+       for (var i = 0; i < json.length; i++) {
+           tr.push('<tr>');
+           var a=i+1;
+            tr.push('<td>' + json[i].id + '</td>');
+              tr.push('<td>' + json[i].projectName + '</td>');
+           tr.push('<td>' +json[i].location + '</td>');
+           tr.push('<td><button type=\'button\' class=\'edit btn\'id=' + json[i].id + '><i class=\'bi bi-pencil-square\'></i></button>&nbsp;&nbsp;<td><button type=\'button\' class=\'delete btn\' id=' + json[i].id + '><i class=\'bi bi-trash\'></i></button></td>');
+                 tr.push('</tr>');
+           op.push('<option value="'+ json[i].code +'">'+ json[i].projectName+'</option>');
+       }
+       $('#cid').append($(op.join('')));
+       $('#system').append($(tr.join('')));
+   });
+
+          //Add System
+			$(document).delegate('#addNewSystem', 'click', function(event) {
+				event.preventDefault();
+
+				var pProjectName = $('#pProjectname').val();
+				var pProjectManager = $('#pProjectManager').val();
+				var pProposer = $('#pProposer').val();
+				var pLocation = $('#pLocation').val();
+				var pLink = $('#pLink').val();
+				var pDate = $('#pDate').val();
+
+
+				$.ajax({
+					type: "POST",
+					contentType: "application/json; charset=utf-8",
+					url: "http://localhost:8080/addProjects",
+					data: JSON.stringify({'projectName': pProjectName, 'proposer': pProposer ,'projectManager':pProjectManager ,'location':pLocation ,'startDate':pDate ,'locationLink': pLink}),
+					cache: false,
+					success: function(result) {
+						window.setTimeout(function(){location.reload()},1000)
+					},
+					error: function(err) {
+						console.log(err);
+					}
+				});
+			});
+
+
+
+   $(document).delegate('#system .delete', 'click', function() {
+        if (confirm('Do you really want to delete record?')) {
+            var id = $(this).attr('id');
+            var parent = $(this).parent().parent();
+            $.ajax({
+                type: "DELETE",
+                url: "http://localhost:8080/deleteItemInSystem/"+id,
+                cache: false,
+                success: function() {
+                    parent.fadeOut('slow', function() {
+                        $(this).remove();
+                    });
+                    location.reload(true)
+                },
+                error: function() {
+                    $('#err').html('<span style=\'color:red; font-weight: bold; font-size: 30px;\'>Error deleting record').fadeIn().fadeOut(4000, function() {
+                        $(this).remove();
+                    });
+                }
+            });
+        }
+
+    });
+
+
+
+
+</script>
+<body>
+    
+
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-system" role="tabpanel" aria-labelledby="nav-system-tab">
+                <!-- add system code here -->
+                <div class="row mb-2 py-4">
+                    <style>
+                        /* Style for the "good" element */
+                        #good {
+                           
+                            font-family: Arial,sans-serif; /* Change the font-family to Arial or any preferred font */
+                             color: blue;
+                             font-size: 24px;
+                              font-weight: bold; /* Change the text color to red or any preferred color */
+                        }
+                    </style>
+                    <p id="good" class="col"> GOOD LUCK!!!! </p>
+                    <div class="col-lg-2">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#systemModal">
+                            Add System
+                        </button>
+                    </div>
+                </div>
+                <style>
+                    /* Center-align text within table cells */
+                    #system td {
+                        font-size: 18px;
+                        text-align: center;
+                    }
+                </style>
+                <style>
+                    
+                    #system th {
+                        font-size: 18px;
+                        text-align: center;
+                        vertical-align: middle; /* Center the text vertically */
+        
+                         /* Center the text vertically */
+    /* Increase the font size for all table headers */
+                    }
+                   
+ 
+                    #system th:nth-child(1), /* Select the first (ID) column */
+                    #system th:nth-child(2),
+                    #system th:nth-child(3),
+                    #system th:nth-child(4),
+                    #system th:nth-child(5)
+                     { /* Select the second (Project Name) column */
+                        font-size: 24px; /* Increase the font size for specific columns */
+                        border: 1px solid #000; /* Add a border around the cells in these columns */
+                        padding: 10px; /* Add padding to create space inside the cells */
+                    }
+                    
+                </style>
+                
+                <table id="system" class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Project Name</th>
+                        <th scope="col">Location</th>
+                        <th scope="col">Actions</th>
+                        <th scope="col">DELETE</th>
+                    </tr>
+                    </thead>
+                </table>
+
+                <!-- System Modal -->
+                <div class="modal fade" id="systemModal" tabindex="-1" aria-labelledby="systemModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="systemModalLabel">Add System</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body p-3">
+                                <form id="addSystem">
+                                    <div class="row g-3">
+                                        <div class="form-group">
+                                            <label>Project Name</label>
+                                            <input type="text" class="form-control" id="pProjectname">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Project Manager</label>
+                                            <input type="text" class="form-control" id="pProjectManager">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Proposer</label>
+                                            <input type="text" class="form-control" id="pProposer">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Location</label>
+                                            <input type="text" class="form-control" id="pLocation">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Link</label>
+                                            <input type="text" class="form-control" id="pLink">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Date</label>
+                                            <input type="text" class="form-control" id="pDate">
+                                        </div>
+
+                                        <button type="submit" id="addNewSystem" value="Submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- System Edit Modal-->
+                <div class="modal fade" id="editSystemModal" tabindex="-1" aria-labelledby="editSystemModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="editSystemModalLabel" >Edit System</h1>
+                                <button type="button" class="edit btn" data-bs-toggle="modal" data-bs-target="#editSystemModal">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    $(document).on('click', '#system .edit', function() {
+    // Get the ID of the system you want to edit
+    var id = $(this).attr('id');
+
+    // Construct the URL for the edit page, passing the ID as a query parameter
+    var editPageURL = 'projectedit.html?id=' + id;
+
+    // Navigate to the edit page
+    window.location.href = editPageURL;
+});
+</script>
+</html>

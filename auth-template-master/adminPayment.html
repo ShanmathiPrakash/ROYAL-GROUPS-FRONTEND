@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make Payment</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        div {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+        }
+
+        select,
+        input[type="text"],
+        input[type="number"],
+        input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button[type="submit"],
+        button[type="button"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            margin-top: 10px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        button[type="button"] {
+            background-color: #007bff;
+            color: #fff;
+            margin-top: 10px;
+        }
+
+        button[type="button"]:hover {
+            background-color: #0056b3;
+        }
+
+        h3 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Button styling */
+        a {
+            text-decoration: none;
+        }
+
+        .received-payments-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: mediumblue;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 43px;
+}
+
+        .received-payments-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <a href="paymenthistory.html" class="received-payments-button">RECEIVED PAYMENTS</a>
+    </div>
+    <form id="payment-form">
+        <h3>MAKE PAYMENT</h3>
+        <div>
+            <label for="username">Username:</label>
+            <select id="username" name="username">
+                <!-- Populate this select with usernames from your user table -->
+                <option value="user1">User 1</option>
+                <option value="user2">User 2</option>
+                <!-- Add more options dynamically or fetch from the database -->
+            </select>
+        </div>
+        <div>
+            <label for="project-name">Project Name:</label>
+            <select id="project-name" name="project_name">
+                <!-- Populate this select with project names from your project table -->
+                <option value="project1">Project 1</option>
+                <option value="project2">Project 2</option>
+                <!-- Add more options dynamically or fetch from the database -->
+            </select>
+        </div>
+        <div id="total-amount"></div>
+        <div>
+            <button type="submit" id="paymentbutton">AMOUNT TO PAY</button>
+        </div>
+        <div>
+            <button type="button" id="pay">PAY</button>
+        </div>
+    </form>
+    <script>
+        const payButton = document.getElementById("pay");
+
+        payButton.addEventListener("click", function () {
+            // Get the username and project name from the selects
+            const username = document.getElementById("username").value;
+            const projectname = document.getElementById("project-name").value;
+
+            // Get the total amount (if available) from the totalAmountElement
+            const totalAmountElement = document.getElementById("total-amount");
+            const amount = totalAmountElement ? totalAmountElement.textContent.replace("Total Amount: ", "") : "";
+
+            // Encode the values to make them URL-safe
+            const encodedUsername = encodeURIComponent(username);
+            const encodedProjectname = encodeURIComponent(projectname);
+            const encodedTotalAmount = encodeURIComponent(amount);
+
+            // Construct the URL with the query parameters
+            const payUrl = `pay.html?username=${encodedUsername}&projectname=${encodedProjectname}&amount=${encodedTotalAmount}`;
+
+            // Redirect to the pay.html page with the query parameters
+            window.location.href = payUrl;
+        });
+
+        // Function to fetch and populate usernames
+        function populateUsernames() {
+            const usernameSelect = document.getElementById("username");
+
+            // Fetch user data from your server
+            fetch('http://localhost:8080/User/get_user', {
+                method: 'GET'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Clear existing options
+                    usernameSelect.innerHTML = "";
+
+                    // Populate the select with retrieved data
+                    data.forEach(user => {
+                        const option = document.createElement("option");
+                        option.value = user.firstname; // Adjust the property name accordingly
+                        option.textContent = user.firstname; // Adjust the property name accordingly
+                        usernameSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error fetching user data:", error);
+                });
+        }
+
+        // Call the function to populate usernames when the page loads
+        populateUsernames();
+
+        function populateProjectnames() {
+            const projectnameSelect = document.getElementById("project-name");
+
+            // Fetch project data from your server
+            fetch("http://localhost:8080/getprojects")
+                .then(response => response.json())
+                .then(data => {
+                    // Clear existing options
+                    projectnameSelect.innerHTML = "";
+
+                    // Populate the select with retrieved data
+                    data.forEach(project => {
+                        const option = document.createElement("option");
+                        option.value = project.projectName;
+                        option.textContent = project.projectName;
+                        projectnameSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error fetching project data:", error);
+                });
+        }
+
+        // Call the function to populate project names when the page loads
+        populateProjectnames();
+
+        const form = document.getElementById("payment-form");
+        const totalAmountElement = document.getElementById("total-amount");
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const username = document.getElementById("username").value;
+            const projectName = document.getElementById("project-name").value;
+
+            // Send a request to the backend with the correct URL and JSON data structure
+            fetch("http://localhost:8080/payment/calculateTotalAmount", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ username, projectName }), // Correct JSON structure
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data);
+                    // Display the total amount in the designated element
+                    totalAmountElement.textContent = `Total Amount: ${data.totalAmount}`;
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
+        });
+    </script>
+</body>
+</html>
